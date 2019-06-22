@@ -8,7 +8,8 @@ const errorOutput = fs.createWriteStream('./stderr.log');
 // Custom simple logger
 const logger = new Console({ stdout: output, stderr: errorOutput });
 // use it like console
-var index;
+// add your routes and middleware below
+app.use(morgan('dev')); //morgan is the middleware in this case
 const dataArray = 
 [
     {
@@ -33,64 +34,56 @@ const dataArray =
 
 app.get('/', (req, res) => {
     // write your code to respond "ok" here
-    var status = {
+    var checkStatus = {
         status: "ok"
     }
-    res.status(200).send(status);
+    res.status(200).send(checkStatus);
+
     });
     //GET request that responds with all "ToDoItems"
     app.get('/api/TodoItems', (req, res) => {
         // write your code to respond "ok" here
-        res.status(200).send(dataArray);
+        res.status(200).json(dataArray);
         });
 
-    app.get('/api/TodoItems', (req, res) => {
-        // write your code to respond "ok" here
-        res.status(200).send(dataArray[index]);
+        //POST request that creates a new single ToDoItem and Adds it to Object dataArray;
+        app.post('/api/TodoItems/', (req, res) => {
+          let newItem = {
+            todoItemId: 0,
+            name: 'an item',
+            priority: 3,
+            completed: false
+          }
+          dataArray.push(newItem);
+          res.status(201).send(newItem);      
+          
+          });
+
+          //DELETE REQUEST that grabs a specific todoItemId number and deletes it from dataArray.
+           app.delete("/api/TodoItems/:number", (req, res) => {
+            let number = req.params.number;
+            let index = dataArray.findIndex(id => id.todoItemId==number);
+            logger.log(number);
+            res.status(200).send(dataArray[index]);
+            });
+
+          //GET REQUEST that grabs a specific ToDoItem using
+          //its index in the array to compare to the actual value of the ToDoItem:Number
+        app.get("/api/TodoItems/:number", (req,res)=>{
+          let number = req.params.number;
+          let index = dataArray.findIndex(id => id.todoItemId==number);
+          logger.log(number);
+          res.status(200).send(dataArray[index]);
         });
-    
-        //Create Two For Loops that compares the last character in a URL which is an ACTUAL number that references the index
-        //Then COMPARE that # to the value within the Object (i.e.  todoItemId: 2,)
-        //Inside of the nested for loop create an "if statement" that says if these numbers
-        //are EQUAL to each other then store that number into a global variable called index;
-        //once that is DONE EDIT LINE 49 to SEND BACK THE CORRECT INDEX.
-        var Resource = req.url;
-
-
-
-    // //POST Request that responds with item, status 201
-    //   app.post('/api/TodoItems/', (req, res) => {
-    //         // write your code to respond "ok" here
-    //     for(let i = 0; i < dataArray.length; i++){
-    //       var dataArrKey;
-    //         for (const key in dataArray) {
-    //             dataArrKey = dataArray[key];
-    //           if(dataArray[i] === dataArray[key])
-    //           {
-    //             logger.log(dataArray[key]);
-    //             res.status(201).send(dataArray[key]); 
-    //           }
-    //           //console.log(key);
-    //         }
-    //       }
-    //         });
-
-      // app.delete("/api/TodoItems/{id}", (req, res) => {
-
-
-      // });
-
-      // app.get("/api/TodoItems/{id}", (req, res) => {
-      //     res.status(200).send('ok');
-
-      // });
 
   
 module.exports = app;
 
 
 
-//OLD CODE FOR TEST #3 POST REQUEST
+
+
+//OLD CODE FOR TEST #3 POST REQUEST STATUS CODE
 // //POST Request that responds with item, status 201
 // app.post('/api/TodoItems/', (req, res) => {
 //   // write your code to respond "ok" here
