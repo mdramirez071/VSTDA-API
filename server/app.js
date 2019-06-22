@@ -2,11 +2,11 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const fs = require('fs');
-const { Console } = require('console');
-const output = fs.createWriteStream('./stdout.log');
-const errorOutput = fs.createWriteStream('./stderr.log');
-// Custom simple logger
-const logger = new Console({ stdout: output, stderr: errorOutput });
+// const { Console } = require('console');
+// const output = fs.createWriteStream('./stdout.log');
+// const errorOutput = fs.createWriteStream('./stderr.log');
+// // Custom simple logger
+// const logger = new Console({ stdout: output, stderr: errorOutput });
 // use it like console
 // add your routes and middleware below
 app.use(morgan('dev')); //morgan is the middleware in this case
@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
            app.delete("/api/TodoItems/:number", (req, res) => {
             let number = req.params.number;
             let index = dataArray.findIndex(id => id.todoItemId==number);
-            logger.log(number);
+            //logger.log(number);
             res.status(200).send(dataArray[index]);
             });
 
@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
         app.get("/api/TodoItems/:number", (req,res)=>{
           let number = req.params.number;
           let index = dataArray.findIndex(id => id.todoItemId==number);
-          logger.log(number);
+          //logger.log(number);
           res.status(200).send(dataArray[index]);
         });
 
